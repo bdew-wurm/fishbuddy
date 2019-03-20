@@ -18,12 +18,6 @@ public class Hooks {
     private static long fishTarget = -10L;
     private static long lastSentAction = Long.MIN_VALUE;
 
-    private static void error(Throwable e) {
-        window.setActive(false);
-        window.setText(1, "Error! (Check logs)");
-        FishBuddy.logException("Error in fishing", e);
-    }
-
     public static void startFishing(FishingSystem.Mode type, float minRadius, float maxRadius, byte rodType, byte rodMaterial, byte reelType, byte reelMaterial, byte floatType, byte baitType, boolean auto) {
         if (!window.isActive()) return;
 
@@ -91,9 +85,9 @@ public class Hooks {
             if (message.equals("You cast the line and start fishing.")) {
                 window.setText(2, "Waiting for fish...");
             } else if (message.startsWith("Fishing rod needs a ") || message.startsWith("Fishing pole needs a ")) {
-                window.clearText();
-                window.setText(1, "Cant fish, missing gear");
-                window.setActive(false);
+                pause("Cant fish - missing gear");
+            } else if (message.startsWith("The water is too shallow")) {
+                pause("Cant fish - too shallow");
             }
         }
     }
@@ -118,5 +112,17 @@ public class Hooks {
         window.setText(1, "Restarting");
         hud.getWorld().getServerConnection().sendAction(fishTool, new long[]{fishTarget}, PlayerAction.FISH);
         lastSentAction = System.currentTimeMillis();
+    }
+
+    private static void error(Throwable e) {
+        window.setActive(false);
+        window.setText(1, "Error! (Check logs)");
+        FishBuddy.logException("Error in fishing", e);
+    }
+
+    private static void pause(String reason) {
+        window.clearText();
+        window.setText(1, reason);
+        window.setActive(false);
     }
 }
