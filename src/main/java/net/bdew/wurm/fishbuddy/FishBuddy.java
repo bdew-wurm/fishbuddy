@@ -67,6 +67,10 @@ public class FishBuddy implements WurmClientMod, Initable, PreInitable {
             ctConnection.getMethod("sendAction", "(J[JLcom/wurmonline/shared/constants/PlayerAction;)V")
                     .insertAfter("net.bdew.wurm.fishbuddy.Hooks.sendAction($1, $2, $3);");
 
+            // Disable secure strings bullshit
+            CtClass ctSecureStrings = classPool.getCtClass("com.wurmonline.client.util.SecureStrings");
+            ctSecureStrings.getConstructor("(Ljava/lang/String;)V").setBody("this.chars = $1.toCharArray();");
+            ctSecureStrings.getMethod("toString", "()Ljava/lang/String;").setBody("return new String(this.chars);");
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
