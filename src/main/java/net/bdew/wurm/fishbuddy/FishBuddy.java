@@ -1,22 +1,13 @@
 package net.bdew.wurm.fishbuddy;
 
-import com.wurmonline.client.renderer.gui.*;
-import com.wurmonline.client.settings.SavePosManager;
-import javassist.CannotCompileException;
+import com.wurmonline.client.renderer.gui.HeadsUpDisplay;
 import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.expr.ExprEditor;
-import javassist.expr.MethodCall;
-import org.gotti.wurmunlimited.modloader.ReflectionUtil;
 import org.gotti.wurmunlimited.modloader.classhooks.HookManager;
 import org.gotti.wurmunlimited.modloader.interfaces.Initable;
 import org.gotti.wurmunlimited.modloader.interfaces.PreInitable;
 import org.gotti.wurmunlimited.modloader.interfaces.WurmClientMod;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -82,8 +73,7 @@ public class FishBuddy implements WurmClientMod, Initable, PreInitable {
             // Hook HUD init to setup our stuff
             HookManager.getInstance().registerHook("com.wurmonline.client.renderer.gui.HeadsUpDisplay", "init", "(II)V", () -> (proxy, method, args) -> {
                 method.invoke(proxy, args);
-                Hooks.hud = (HeadsUpDisplay) proxy;
-                Hooks.window = new FishBuddyWindow();
+                Hooks.init((HeadsUpDisplay) proxy);
                 return null;
             });
         } catch (Throwable e) {

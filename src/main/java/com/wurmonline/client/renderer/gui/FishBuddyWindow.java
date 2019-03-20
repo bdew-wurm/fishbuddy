@@ -45,8 +45,7 @@ public class FishBuddyWindow extends WWindow implements ButtonListener {
 
     @Override
     public void gameTick() {
-        if (active && hud.getActionString() == null)
-            Hooks.checkSendAction();
+        if (active) Hooks.pollFishing();
     }
 
     public void setActive(boolean value) {
