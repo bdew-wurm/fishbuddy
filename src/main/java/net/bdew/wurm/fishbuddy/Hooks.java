@@ -87,8 +87,15 @@ public class Hooks {
 
     public static void textMessage(String title, float r, float g, float b, String message, byte onScreenType) {
         if (!window.isActive()) return;
-        if (title.equals(":Event") && message.contains("You cast the line and start fishing."))
-            window.setText(2, "Waiting for fish...");
+        if (title.equals(":Event")) {
+            if (message.equals("You cast the line and start fishing.")) {
+                window.setText(2, "Waiting for fish...");
+            } else if (message.startsWith("Fishing rod needs a ") || message.startsWith("Fishing pole needs a ")) {
+                window.clearText();
+                window.setText(1, "Cant fish, missing gear");
+                window.setActive(false);
+            }
+        }
     }
 
     public static void sendAction(long source, long[] targets, PlayerAction action) {
