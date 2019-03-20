@@ -112,9 +112,11 @@ public class Hooks {
             if (message.equals("You cast the line and start fishing.")) {
                 window.setText(2, "Waiting for fish...");
             } else if (message.startsWith("Fishing rod needs a ") || message.startsWith("Fishing pole needs a ")) {
-                pause("Cant fish - missing gear");
+                pause("Can't fish - missing gear");
             } else if (message.startsWith("The water is too shallow")) {
-                pause("Cant fish - too shallow");
+                pause("Can't fish - too shallow");
+            } else if (message.startsWith("You wouldn't be able to carry")) {
+                pause("Can't fish - inventory full");
             }
         }
     }
