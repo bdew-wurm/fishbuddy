@@ -53,8 +53,8 @@ public class Hooks {
             window.setText(2, "Status: Casting rod");
 
             float rot = hud.getWorld().getPlayerRotX();
-            float x = (float) (hud.getWorld().getPlayerPosX() + Math.sin(rot * WMath.DEG_TO_RAD) * maxRadius * 0.95f);
-            float y = (float) (hud.getWorld().getPlayerPosY() - Math.cos(rot * WMath.DEG_TO_RAD) * maxRadius * 0.95f);
+            float x = (float) (hud.getWorld().getPlayerPosX() + Math.sin(rot * WMath.DEG_TO_RAD) * maxRadius * 0.5f);
+            float y = (float) (hud.getWorld().getPlayerPosY() - Math.cos(rot * WMath.DEG_TO_RAD) * maxRadius * 0.5f);
 
             FishingSystem fishing = Hooks.hud.getWorld().getWorldRenderer().getFishing();
 
