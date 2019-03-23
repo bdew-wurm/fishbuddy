@@ -24,11 +24,14 @@ public class Hooks {
     private static long fishTarget = -10L;
     private static long lastSentAction = Long.MIN_VALUE;
     private static long lastTriedStrike = Long.MIN_VALUE;
+    private static boolean needsRepair = false;
 
     private static FishingSystem.Mode mode = null;
 
     private static Field fishingTargetX, fishingTargetY;
     private static Method fishingCastRod, fishingStrikeRod;
+
+    private static final long ACTION_DELAY = 500;
 
     public static void init(HeadsUpDisplay theHud) throws NoSuchMethodException, NoSuchFieldException {
         hud = theHud;
@@ -95,7 +98,8 @@ public class Hooks {
     }
 
     public static void cancelFishing(long playerId) {
-        if (window.isActive() && playerId == -1) restartFishing();
+        if (window.isActive() && playerId == -1 && lastSentAction + ACTION_DELAY < System.currentTimeMillis())
+            restartFishing();
     }
 
     public static void showFishStrike() {
@@ -129,13 +133,19 @@ public class Hooks {
             window.setText(1, "Starting");
             fishTool = source;
             fishTarget = targets[0];
+            lastSentAction = System.currentTimeMillis();
         }
     }
 
+    public static void updateInventoryItem(long id, float damage) {
+        if (window.isActive() && fishTool == id)
+            needsRepair = damage > 1f;
+    }
+
     public static void pollFishing() {
-        if (hud.getActionString() == null && lastSentAction + 500 < System.currentTimeMillis())
+        if (hud.getActionString() == null && lastSentAction + ACTION_DELAY < System.currentTimeMillis())
             restartFishing();
-        else if (mode == FishingSystem.Mode.SPEAR_FISHING && lastTriedStrike + 500 < System.currentTimeMillis()) {
+        else if (mode == FishingSystem.Mode.SPEAR_FISHING && lastTriedStrike + ACTION_DELAY < System.currentTimeMillis()) {
             lastTriedStrike = System.currentTimeMillis();
 
             PlayerPosition playerPos = hud.getWorld().getPlayer().getPos();
@@ -181,9 +191,15 @@ public class Hooks {
 
     private static void restartFishing() {
         window.clearText();
-        window.setText(1, "Restarting");
-        hud.getWorld().getServerConnection().sendAction(fishTool, new long[]{fishTarget}, PlayerAction.FISH);
-        lastSentAction = System.currentTimeMillis();
+        if (needsRepair) {
+            window.setText(1, "Repairing");
+            hud.sendAction(PlayerAction.REPAIR, fishTool);
+            lastSentAction = System.currentTimeMillis();
+        } else {
+            window.setText(1, "Restarting");
+            hud.getWorld().getServerConnection().sendAction(fishTool, new long[]{fishTarget}, PlayerAction.FISH);
+            lastSentAction = System.currentTimeMillis();
+        }
     }
 
     private static void error(Throwable e) {

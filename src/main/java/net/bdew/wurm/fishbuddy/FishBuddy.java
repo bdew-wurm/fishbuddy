@@ -55,6 +55,9 @@ public class FishBuddy implements WurmClientMod, Initable, PreInitable {
             ctListener.getMethod("textMessage", "(Ljava/lang/String;FFFLjava/lang/String;B)V")
                     .insertAfter("net.bdew.wurm.fishbuddy.Hooks.textMessage($1, $2, $3, $4, $5, $6);");
 
+            ctListener.getMethod("updateInventoryItem", "(JJJLjava/lang/String;Ljava/lang/String;FFFFFFISBBBS)V")
+                    .insertAfter("net.bdew.wurm.fishbuddy.Hooks.updateInventoryItem($2, $7);");
+
             ctConnection.getMethod("sendAction", "(J[JLcom/wurmonline/shared/constants/PlayerAction;)V")
                     .insertAfter("net.bdew.wurm.fishbuddy.Hooks.sendAction($1, $2, $3);");
 
