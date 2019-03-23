@@ -150,8 +150,10 @@ public class Hooks {
 
             Optional<CreatureCellRenderable> fish = hud.getWorld().getServerConnection().getServerConnectionListener()
                     .getCreatures().values().stream()
-                    .filter(c -> c.getModelName().toString().startsWith("model.creature.fish."))
-                    .min(comparator);
+                    .filter(c -> {
+                        String m = c.getModelName().toString();
+                        return m.startsWith("model.creature.fish.") && !m.startsWith("model.creature.fish.seal");
+                    }).min(comparator);
 
             if (fish.isPresent()) {
                 window.setText(2, "Status: Striking!");
