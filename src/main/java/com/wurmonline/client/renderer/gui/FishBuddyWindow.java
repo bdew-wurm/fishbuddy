@@ -6,7 +6,7 @@ public class FishBuddyWindow extends WWindow implements ButtonListener {
     private final WButton btStop, btPause;
     private WurmLabel[] text;
 
-    protected boolean active = false;
+    private boolean active = false, visible = false;
 
     public FishBuddyWindow() {
         super("FishBuddy");
@@ -36,7 +36,7 @@ public class FishBuddyWindow extends WWindow implements ButtonListener {
     @Override
     public void buttonClicked(WButton button) {
         if (button == btStop) {
-            active = false;
+            visible = active = false;
             hud.hideComponent(this);
         } else if (button == btPause) {
             setActive(!active);
@@ -59,7 +59,13 @@ public class FishBuddyWindow extends WWindow implements ButtonListener {
         return active;
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
+
     public void show() {
+        visible = true;
         hud.showComponent(this);
         setPosition((hud.getWidth() - width) / 2, (hud.getHeight() - height) / 2);
     }

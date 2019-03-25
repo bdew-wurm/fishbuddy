@@ -126,9 +126,13 @@ public class Hooks {
     }
 
     public static void sendAction(long source, long[] targets, PlayerAction action) {
-        if (action.getId() == PlayerAction.CMD_FISH && targets.length == 1 && !window.isActive()) {
-            window.show();
-            window.setActive(true);
+        if (action.getId() == PlayerAction.CMD_FISH && targets.length == 1) {
+            if (window.isVisible()) {
+                if (!window.isActive()) return;
+            } else {
+                window.show();
+                window.setActive(true);
+            }
             window.clearText();
             window.setText(1, "Starting");
             fishTool = source;
