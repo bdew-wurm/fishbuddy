@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 group "net.bdew.wurm"
-version "1.0"
+version "1.1"
 
 repositories {
     mavenCentral()
@@ -16,7 +16,7 @@ dependencies {
 }
 
 jar {
-    archiveName "${project.name}.jar"
+    archiveFileName = "${project.name}.jar"
 }
 
 task dist(type: Zip) {
@@ -27,5 +27,5 @@ task dist(type: Zip) {
         from fileTree(dir: 'mods', include: '*')
     })
 
-    archiveName "${project.name}-${project.version}.zip"
+    archiveFileName = "${project.name}-${project.version}.zip"
 }

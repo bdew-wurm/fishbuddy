@@ -13,20 +13,19 @@ public class FishBuddyWindow extends WWindow implements ButtonListener {
         setTitle("FishBuddy");
         resizable = false;
         closeable = false;
-        width = 300;
-        height = 100;
         text = new WurmLabel[3];
         btStop = new WButton("Stop", this);
         btPause = new WButton("Pause", this);
         btStop.setSize(150, btStop.height);
         btPause.setSize(150, btPause.height);
-        WurmArrayPanel<FlexComponent> buttons = new WurmArrayPanel<>(1, 300, 16);
+        WurmArrayPanel<FlexComponent> buttons = new WurmArrayPanel<>(WurmArrayPanel.DIR_HORIZONTAL, 300, btStop.height);
         buttons.addComponents(btStop, btPause);
-        WurmArrayPanel<FlexComponent> panel = new WurmArrayPanel<>(0, 300, 100);
+        WurmArrayPanel<FlexComponent> panel = new WurmArrayPanel<>(WurmArrayPanel.DIR_VERTICAL, 300, 100);
         for (int i = 0; i < text.length; i++)
             panel.addComponent(text[i] = new WurmLabel(""));
         panel.addComponents(buttons);
         setComponent(panel);
+        this.setSize(300, panel.calcHeight() + 25);
     }
 
     @Override
